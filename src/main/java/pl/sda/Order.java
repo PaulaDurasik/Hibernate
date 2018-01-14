@@ -1,11 +1,19 @@
 package pl.sda;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
-@Entity
-public class Order {
+import java.util.Objects;
 
+@Entity
+@JsonIdentityInfo(
+        generator=ObjectIdGenerators.PropertyGenerator.class,
+        property="orderId"
+)
+public class Order {
     @Id
     @GeneratedValue
     private Integer orderId;
@@ -21,32 +29,28 @@ public class Order {
             @AttributeOverride(name = "street", column = @Column(name = "delivery_street")),
             @AttributeOverride(name = "city", column = @Column(name = "delivery_city")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "delivery_postal_code"))})
-
-
-    private Address deliverAdress;
+    private Address deliveryAddress;
     @Enumerated(EnumType.STRING)
-    private String status;
+    private Status status;
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
     @OneToMany(mappedBy = "order")
-    private List<OrderDetails> orderDetails;
-
+    private List<OrderDetail> orderDetails;
 
     public Order() {
     }
 
-    public Order(Integer orderId, String customerName, Address customerAddress,
-                 Address deliverAdress, String status, Date creationDate, List <OrderDetails> orderDetails) {
+    public Order(Integer orderId, String customerName, Address customerAddress, Address deliveryAddress, Status status, Date creationDate, List<OrderDetail> orderDetails) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.customerAddress = customerAddress;
-        this.deliverAdress = deliverAdress;
+        this.deliveryAddress = deliveryAddress;
         this.status = status;
         this.creationDate = creationDate;
         this.orderDetails = orderDetails;
     }
 
-    public int getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
@@ -70,19 +74,19 @@ public class Order {
         this.customerAddress = customerAddress;
     }
 
-    public Address getDeliverAdress() {
-        return deliverAdress;
+    public Address getDeliveryAddress() {
+        return deliveryAddress;
     }
 
-    public void setDeliverAdress(Address deliverAdress) {
-        this.deliverAdress = deliverAdress;
+    public void setDeliveryAddress(Address deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -94,11 +98,11 @@ public class Order {
         this.creationDate = creationDate;
     }
 
-    public List <OrderDetails> getOrderDetails() {
+    public List<OrderDetail> getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(List <OrderDetails> orderDetails) {
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
     }
 
@@ -106,16 +110,13 @@ public class Order {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Order order = (Order) o;
-
         return orderId == order.orderId;
     }
 
-
     @Override
     public int hashCode() {
-        return orderId;
+        return Objects.hash(orderId);
     }
 
     @Override
@@ -124,8 +125,8 @@ public class Order {
                 "orderId=" + orderId +
                 ", customerName='" + customerName + '\'' +
                 ", customerAddress=" + customerAddress +
-                ", deliverAdress=" + deliverAdress +
-                ", status='" + status + '\'' +
+                ", deliveryAddress=" + deliveryAddress +
+                ", status=" + status +
                 ", creationDate=" + creationDate +
                 ", orderDetails=" + orderDetails +
                 '}';

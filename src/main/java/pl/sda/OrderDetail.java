@@ -1,26 +1,30 @@
 package pl.sda;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
-public class OrderDetails {
+@Table(name="order_detail")
+public class OrderDetail {
     @Id
-   private Integer orderDetailId;
-    @ManyToOne(fetch= FetchType.LAZY)
-   private Order order;
-   private String productName;
-   private BigDecimal quantity;
-   private BigDecimal productPrice;
+    @GeneratedValue
+    @Column(name="order_detail_id")
+    private Integer orderDetailId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="order_id")// jeżelui jest kluczem obcym to piszemy joincolumn zamiast coulmn
+    private Order order;
+    @Column(name="product_name")
+    private String productName;
+    @Column(name="product_quality")
+    private BigDecimal quantity;
+    @Column(name="product_price")
+    private BigDecimal productPrice;
 
-    public OrderDetails() {
+    public OrderDetail() {
     }
 
-
-    public OrderDetails(Integer orderDetailId, Order order, String productName, BigDecimal quantity, BigDecimal productPrice) {
+    public OrderDetail(Integer orderDetailId, Order order, String productName, BigDecimal quantity, BigDecimal productPrice) {
         this.orderDetailId = orderDetailId;
         this.order = order;
         this.productName = productName;
@@ -72,22 +76,20 @@ public class OrderDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        OrderDetails that = (OrderDetails) o;
-
-        return orderDetailId.equals(that.orderDetailId);
+        OrderDetail that = (OrderDetail) o;
+        return Objects.equals(orderDetailId, that.orderDetailId);
     }
 
     @Override
     public int hashCode() {
-        return orderDetailId.hashCode();
+        return Objects.hash(orderDetailId);
     }
 
     @Override
     public String toString() {
-        return "OrderDetails{" +
+        return "OrderDetail{" +
                 "orderDetailId=" + orderDetailId +
-                ", order=" + order +
+                ", orderId=" + order.getOrderId() +
                 ", productName='" + productName + '\'' +
                 ", quantity=" + quantity +
                 ", productPrice=" + productPrice +

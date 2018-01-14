@@ -26,8 +26,8 @@
         </property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="hbm2ddl.auto">create</property>
         <mapping class="pl.sda.Order"/>
-        <mapping class="pl.sda.OrderDetails"/>
+        <mapping class="pl.sda.OrderDetail"/>
     </session-factory>
 </hibernate-configuration>
